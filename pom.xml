@@ -6,7 +6,17 @@
 
   <groupId>io.github.clamber-l</groupId>
   <artifactId>clamber-core</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>Clamber Core</name>
+  <description>Clamber Core</description>
+  <url>https://github.com/Clamber-L/clamber-core</url>
+
+  <properties>
+    <fastjson.version>1.2.83</fastjson.version>
+    <gpg.keyname>0550BF7D55461A07D685A80E23F9B328767345A7</gpg.keyname>
+  </properties>
 
   <!-- 许可证（Apache 2.0 常用） -->
   <licenses>
@@ -16,29 +26,34 @@
     </license>
   </licenses>
 
-  <!-- 开发者信息 -->
+  <!-- Developers -->
   <developers>
     <developer>
       <id>Clamber-L</id>
-      <name>Clamber L</name>
+      <name>Clamber</name>
       <url>https://github.com/Clamber-L</url>
     </developer>
   </developers>
 
-  <properties>
-    <fastjson.version>1.2.83</fastjson.version>
-  </properties>
+  <!-- GitHub 项目信息 -->
+  <scm>
+    <connection>scm:git:git://github.com/Clamber-L/clamber-core.git</connection>
+    <developerConnection>scm:git:ssh://github.com/Clamber-L/clamber-core.git</developerConnection>
+    <url>https://github.com/Clamber-L/clamber-core</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <version>6.2.8</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-core</artifactId>
-      <version>9.0.19</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.7.13</version>
     </dependency>
     <dependency>
       <groupId>com.alibaba</groupId>
@@ -59,18 +74,72 @@
 
   <build>
     <plugins>
+      <!-- Maven Compiler -->
       <plugin>
-        <!-- Build an executable JAR -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
         <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>${project.groupId}.Main</mainClass>
-            </manifest>
-          </archive>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <!-- GPG 签名插件（Maven Central 必须有签名） -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.2.4</version>
+        <configuration>
+          <gpgArguments>
+            <arg>--pinentry-mode</arg>
+            <arg>loopback</arg>
+          </gpgArguments>
+          <keyname>${gpg.keyname}</keyname>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Javadoc -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Nexus Staging -->
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.8.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
         </configuration>
       </plugin>
     </plugins>
