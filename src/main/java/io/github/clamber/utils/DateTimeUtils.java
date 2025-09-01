@@ -10,35 +10,90 @@ import java.time.temporal.TemporalAdjusters;
 public class DateTimeUtils {
 
     /**
+     * 某月第一天
+     * @param localDateTime 当月日期
+     * @return LocalDateTime
+     */
+    private static LocalDateTime firstOfMonth(LocalDateTime localDateTime) {
+        return LocalDateTime.of(localDateTime.toLocalDate().with(TemporalAdjusters.firstDayOfMonth()), LocalTime.MIN);
+    }
+
+    /**
+     * 某月第一天
+     * @param localDate 当月日期
+     * @return LocalDateTime
+     */
+    private static LocalDateTime firstOfMonth(LocalDate localDate) {
+        return LocalDateTime.of(localDate.with(TemporalAdjusters.firstDayOfMonth()), LocalTime.MIN);
+    }
+
+    /**
      * 本月第一天
      * @return LocalDateTime
      */
-    public static LocalDateTime firstDateTimeOfMonth() {
-        return LocalDateTime.of(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()), LocalTime.MIN);
+    public static LocalDateTime firstDatetimeOfThisMonth() {
+        return firstOfMonth(LocalDateTime.now());
     }
 
     /**
-     * 本月最后一天
+     * 某月最后一天
+     * @param localDateTime 当前日期
      * @return LocalDateTime
      */
-    public static LocalDateTime lastDateTimeOfMonth() {
-        return LocalDateTime.of(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()), LocalTime.MAX);
+    public static LocalDateTime lastOfMonth(LocalDateTime localDateTime) {
+        return LocalDateTime.of(localDateTime.toLocalDate().with(TemporalAdjusters.lastDayOfMonth()), LocalTime.MAX);
     }
 
     /**
-     * 本周第一天
+     * 某月最后一天
+     * @param localDate 当前日期
      * @return LocalDateTime
      */
-    public static LocalDateTime firstDateTimeOfWeek() {
-        return LocalDateTime.now().with(DayOfWeek.MONDAY);
+    public static LocalDateTime lastOfMonth(LocalDate localDate) {
+        return LocalDateTime.of(localDate.with(TemporalAdjusters.lastDayOfMonth()), LocalTime.MAX);
     }
 
     /**
-     * 本周最后一天
+     * 当月最后一天
      * @return LocalDateTime
      */
-    public static LocalDateTime lastDateTimeOfWeek() {
-        return LocalDateTime.now().with(DayOfWeek.SUNDAY);
+    private static LocalDateTime lastOfThisMonth() {
+        return lastOfMonth(LocalDateTime.now());
+    }
+
+
+    /**
+     * 日期的周一
+     * @param localDateTime 日期
+     * @return LocalDateTime
+     */
+    public static LocalDateTime firstOfWeek(LocalDateTime localDateTime) {
+        return localDateTime.with(DayOfWeek.MONDAY);
+    }
+
+    /**
+     * 本周的周一
+     * @return LocalDateTime
+     */
+    public static LocalDateTime firstOfThisWeek() {
+        return firstOfWeek(LocalDateTime.now());
+    }
+
+    /**
+     * 日期的周末
+     * @param localDateTime 日期
+     * @return LocalDateTime
+     */
+    public static LocalDateTime lastOfWeek(LocalDateTime localDateTime) {
+        return localDateTime.with(DayOfWeek.SUNDAY);
+    }
+
+    /**
+     * 本周的周末
+     * @return LocalDateTime
+     */
+    private static LocalDateTime lastOfThisWeek() {
+        return lastOfWeek(LocalDateTime.now());
     }
 
     /**
@@ -56,5 +111,15 @@ public class DateTimeUtils {
      */
     public static String datetimeFormat(String patten) {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(patten));
+    }
+
+    /**
+     * 特定日期，格式，格式化
+     * @param localDateTime 日期
+     * @param patten 格式
+     * @return String
+     */
+    private static String datetimeFormat(LocalDateTime localDateTime, String patten) {
+        return localDateTime.format(DateTimeFormatter.ofPattern(patten));
     }
 }
